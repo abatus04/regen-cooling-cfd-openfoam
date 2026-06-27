@@ -1,0 +1,14 @@
+# Time directories
+[1-9]*/
+0.[0-9]*/
+
+# Keep initial conditions
+!0/
+
+# Large mesh files — keep only what's needed
+postProcessing/
+processor*/
+*.log
+log.*
+*.foam
+

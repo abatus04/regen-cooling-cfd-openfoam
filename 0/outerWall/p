@@ -1,0 +1,44 @@
+/*--------------------------------*- C++ -*-----------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      p;
+}
+
+dimensions      [1 -1 -2 0 0 0 0];
+
+internalField   uniform 100000;
+
+boundaryField
+{
+    outerBoundary
+    {
+        type            calculated;
+        value           uniform 100000;
+    }
+
+    outerWall_to_fluid
+    {
+        type            calculated;
+        value           uniform 100000;
+    }
+
+    solidInlet
+    {
+        type            calculated;
+        value           uniform 100000;
+    }
+
+    solidOutlet
+    {
+        type            calculated;
+        value           uniform 100000;
+    }
+
+    frontAndBack
+    {
+        type            empty;
+    }
+}

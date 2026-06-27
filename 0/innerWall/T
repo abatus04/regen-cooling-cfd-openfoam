@@ -1,0 +1,44 @@
+/*--------------------------------*- C++ -*-----------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      T;
+}
+
+dimensions      [0 0 0 1 0 0 0];
+
+internalField   uniform 800;        // initial guess
+
+boundaryField
+{
+    hotGasWall
+    {
+        type            fixedValue;
+        value           uniform 1500;   // combustion side — 1500K
+    }
+
+    innerWall_to_fluid
+    {
+        type            compressible::turbulentTemperatureCoupledBaffleMixed;
+        Tnbr            T;
+        kappaMethod     solidThermo;
+        value           uniform 800;
+    }
+
+    solidInlet
+    {
+        type            zeroGradient;
+    }
+
+    solidOutlet
+    {
+        type            zeroGradient;
+    }
+
+    frontAndBack
+    {
+        type            empty;
+    }
+}

@@ -1,0 +1,47 @@
+/*--------------------------------*- C++ -*-----------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      T;
+}
+
+dimensions      [0 0 0 1 0 0 0];
+
+internalField   uniform 300;
+
+boundaryField
+{
+    coolantInlet
+    {
+        type            fixedValue;
+        value           uniform 300;    // cold water entering at 300K
+    }
+
+    coolantOutlet
+    {
+        type            zeroGradient;
+    }
+
+    fluid_to_innerWall
+    {
+        type            compressible::turbulentTemperatureCoupledBaffleMixed;
+        Tnbr            T;
+        kappaMethod     fluidThermo;
+        value           uniform 300;
+    }
+
+    fluid_to_outerWall
+    {
+        type            compressible::turbulentTemperatureCoupledBaffleMixed;
+        Tnbr            T;
+        kappaMethod     fluidThermo;
+        value           uniform 300;
+    }
+
+    frontAndBack
+    {
+        type            empty;
+    }
+}

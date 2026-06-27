@@ -1,0 +1,144 @@
+/*--------------------------------*- C++ -*-----------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+
+scale   0.001;  // mm to meters
+
+// ─── GEOMETRY ────────────────────────────────────────────────────────────────
+//
+//  y=0       y=1        y=4        y=5.5
+//  |         |          |          |
+//  |  outer  |  coolant |  inner   |
+//  |  wall   |  channel |  wall    |  ← hot gas side
+//  | (solid) |  (fluid) | (solid)  |
+//  |  1mm    |   3mm    |  1.5mm   |
+//
+//  x = 0 to 100mm (channel length)
+//  z = 0 to 2mm   (channel width)
+//
+// VERTICES (x y z):
+// Front face (z=0): v0-v11
+// Back face  (z=2): v12-v23
+
+vertices
+(
+    // ── FRONT FACE (z=0) ──────────────────────────
+    // outer wall bottom
+    (  0   0   0)   // v0
+    (100   0   0)   // v1
+    // fluid-solid interface (outer)
+    (  0   1   0)   // v2
+    (100   1   0)   // v3
+    // fluid-solid interface (inner)
+    (  0   4   0)   // v4
+    (100   4   0)   // v5
+    // inner wall top (hot gas side)
+    (  0   5.5 0)   // v6
+    (100   5.5 0)   // v7
+
+    // ── BACK FACE (z=2) ───────────────────────────
+    (  0   0   2)   // v8
+    (100   0   2)   // v9
+    (  0   1   2)   // v10
+    (100   1   2)   // v11
+    (  0   4   2)   // v12
+    (100   4   2)   // v13
+    (  0   5.5 2)   // v14
+    (100   5.5 2)   // v15
+);
+
+blocks
+(
+    // Block 0: outer solid wall (y = 0 to 1mm)
+    hex (0 1 3 2   8 9 11 10)
+    outerWall
+    (100 10 1)
+    simpleGrading (1 1 1)
+
+    // Block 1: fluid channel (y = 1 to 4mm)
+    hex (2 3 5 4   10 11 13 12)
+    fluid
+    (100 30 1)
+    simpleGrading (1 1 1)
+
+    // Block 2: inner solid wall (y = 4 to 5.5mm)
+    hex (4 5 7 6   12 13 15 14)
+    innerWall
+    (100 15 1)
+    simpleGrading (1 2 1)  // finer toward hot gas side
+);
+
+edges
+(
+);
+
+boundary
+(
+    coolantInlet
+    {
+        type    patch;
+        faces   ((2 10 12 4));
+    }
+
+    coolantOutlet
+    {
+        type    patch;
+        faces   ((3 5 13 11));
+    }
+
+    hotGasWall
+    {
+        type    wall;
+        faces   ((6 7 15 14));
+    }
+
+    outerBoundary
+    {
+        type    wall;
+        faces   ((0 1 9 8));
+    }
+
+    solidInlet
+    {
+        type    wall;
+        faces
+        (
+            (0 2 10 8)
+            (4 6 14 12)
+        );
+    }
+
+    solidOutlet
+    {
+        type    wall;
+        faces
+        (
+            (1 3 11 9)
+            (5 7 15 13)
+        );
+    }
+
+    frontAndBack
+    {
+        type    empty;
+        faces
+        (
+            (0 1 3 2)
+            (2 3 5 4)
+            (4 5 7 6)
+            (8 9 11 10)
+            (10 11 13 12)
+            (12 13 15 14)
+        );
+    }
+);
+
+    // Axial ends (inlet/outlet of solid regions)
+
+mergePatchPairs
+();

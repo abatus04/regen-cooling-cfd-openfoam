@@ -1,0 +1,42 @@
+/*--------------------------------*- C++ -*-----------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      thermophysicalProperties;
+}
+
+thermoType
+{
+    type            heRhoThermo;
+    mixture         pureMixture;
+    transport       const;
+    thermo          hConst;
+    equationOfState rhoConst;
+    specie          specie;
+    energy          sensibleEnthalpy;
+}
+
+mixture
+{
+    specie
+    {
+        molWeight   18.0;       // Water
+    }
+    equationOfState
+    {
+        rho         998;        // kg/m3 at 300K
+    }
+    thermodynamics
+    {
+        Cp          4182;       // J/kg.K water
+        Hf          0;
+    }
+    transport
+    {
+        mu          1e-3;       // Pa.s water at 300K
+        Pr          7.0;        // Prandtl number water
+    }
+}
+

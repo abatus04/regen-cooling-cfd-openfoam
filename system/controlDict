@@ -1,0 +1,21 @@
+/*--------------------------------*- C++ -*-----------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+
+application     chtMultiRegionFoam;
+
+startFrom       startTime;
+startTime       0;
+stopAt          endTime;
+endTime         5;
+deltaT          1e-4;
+
+writeControl    timeStep;
+writeInterval   500;
+
+runTimeModifiable true;
